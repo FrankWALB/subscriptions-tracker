@@ -1,0 +1,41 @@
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="sidebarOpen()">
+    <div class="sidebar-brand">
+      <span class="brand-icon">💳</span>
+      <span class="brand-name">Abo Tracker</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" (click)="sidebarOpen.set(false)">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/subscriptions" routerLinkActive="active" class="nav-item" (click)="sidebarOpen.set(false)">
+        <span class="nav-icon">📋</span>
+        <span>Meine Abos</span>
+      </a>
+      <a routerLink="/subscriptions/new" routerLinkActive="active" class="nav-item nav-item-new" (click)="sidebarOpen.set(false)">
+        <span class="nav-icon">➕</span>
+        <span>Abo hinzufügen</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Mobile overlay -->
+  @if (sidebarOpen()) {
+    <div class="overlay" (click)="sidebarOpen.set(false)"></div>
+  }
+
+  <!-- Main content -->
+  <div class="main-wrapper">
+    <header class="topbar">
+      <button class="menu-btn" (click)="sidebarOpen.set(!sidebarOpen())">☰</button>
+      <span class="topbar-title">{{ title() }}</span>
+    </header>
+
+    <main class="main-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

@@ -1,0 +1,103 @@
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Lade Dashboard...</p>
+  </div>
+} @else if (!stats()) {
+  <div class="empty-state">
+    <div class="empty-icon">📊</div>
+    <h3>Keine Daten verfügbar</h3>
+    <p>Füge dein erstes Abo hinzu, um das Dashboard zu sehen.</p>
+    <a routerLink="/subscriptions/new" class="btn-primary">Abo hinzufügen</a>
+  </div>
+} @else {
+  <div class="dashboard">
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card kpi-monthly">
+        <div class="kpi-icon">📅</div>
+        <div class="kpi-content">
+          <span class="kpi-label">Monatliche Kosten</span>
+          <span class="kpi-value">{{ stats()!.monthlyTotal | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-yearly">
+        <div class="kpi-icon">📆</div>
+        <div class="kpi-content">
+          <span class="kpi-label">Jährliche Kosten</span>
+          <span class="kpi-value">{{ stats()!.yearlyTotal | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-count">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-content">
+          <span class="kpi-label">Aktive Abos</span>
+          <span class="kpi-value">{{ stats()!.activeCount }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-daily">
+        <div class="kpi-icon">☕</div>
+        <div class="kpi-content">
+          <span class="kpi-label">Pro Tag</span>
+          <span class="kpi-value">{{ (stats()!.monthlyTotal / 30) | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="dashboard-grid">
+      <!-- Category Breakdown -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Kosten nach Kategorie</h2>
+          <span class="card-badge">Monatlich</span>
+        </div>
+        <div class="category-list">
+          @for (cat of stats()!.byCategory; track cat.category) {
+            <div class="category-item">
+              <div class="category-meta">
+                <span class="category-icon">{{ categoryIcons[cat.category] || '📦' }}</span>
+                <span class="category-name">{{ cat.category }}</span>
+                <span class="category-amount">{{ cat.monthly | currency:'EUR':'symbol':'1.2-2':'de' }}/Mo</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width]="getBarWidth(cat.monthly)"></div>
+              </div>
+            </div>
+          } @empty {
+            <p class="empty-hint">Keine Kategorien verfügbar</p>
+          }
+        </div>
+      </div>
+
+      <!-- Upcoming Payments -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Nächste Zahlungen</h2>
+          <a routerLink="/subscriptions" class="card-link">Alle anzeigen →</a>
+        </div>
+        <div class="upcoming-list">
+          @for (payment of stats()!.upcomingPayments; track payment.id) {
+            <div class="upcoming-item">
+              <div class="upcoming-dot" [style.background]="payment.color"></div>
+              <div class="upcoming-info">
+                <span class="upcoming-name">{{ payment.name }}</span>
+                <span class="upcoming-date">{{ formatDate(payment.nextPayment) }}</span>
+              </div>
+              <div class="upcoming-right">
+                <span class="upcoming-cost">{{ payment.cost | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+                <span class="upcoming-days" [class.urgent]="getNextPaymentDays(payment.nextPayment) <= 3">
+                  in {{ getNextPaymentDays(payment.nextPayment) }}d
+                </span>
+              </div>
+            </div>
+          } @empty {
+            <p class="empty-hint">Keine bevorstehenden Zahlungen</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

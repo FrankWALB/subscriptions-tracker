@@ -1,0 +1,75 @@
+<div class="form-page">
+  <div class="form-header">
+    <a routerLink="/subscriptions" class="back-link">← Zurück</a>
+    <h1>{{ isEdit() ? 'Abo bearbeiten' : 'Neues Abo' }}</h1>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-card">
+    <!-- Name -->
+    <div class="field">
+      <label for="name">Name *</label>
+      <input id="name" type="text" formControlName="name" placeholder="z.B. Netflix, Spotify..." autocomplete="off" />
+      @if (form.get('name')?.touched && form.get('name')?.errors?.['required']) {
+        <span class="field-error">Name ist erforderlich</span>
+      }
+    </div>
+
+    <!-- Cost + Cycle -->
+    <div class="field-row">
+      <div class="field">
+        <label for="cost">Betrag (€) *</label>
+        <input id="cost" type="number" formControlName="cost" placeholder="9.99" min="0" step="0.01" />
+        @if (form.get('cost')?.touched && form.get('cost')?.errors?.['required']) {
+          <span class="field-error">Betrag ist erforderlich</span>
+        }
+      </div>
+      <div class="field">
+        <label for="cycle">Abrechnungszyklus</label>
+        <select id="cycle" formControlName="billingCycle">
+          @for (cycle of billingCycles; track cycle.value) {
+            <option [value]="cycle.value">{{ cycle.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="field">
+      <label>Kategorie</label>
+      <div class="category-grid">
+        @for (cat of categories; track cat) {
+          <button type="button" class="cat-btn" [class.selected]="form.get('category')?.value === cat"
+            (click)="form.patchValue({ category: cat })">
+            {{ cat }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Start Date -->
+    <div class="field">
+      <label for="startDate">Startdatum</label>
+      <input id="startDate" type="date" formControlName="startDate" />
+    </div>
+
+    <!-- Color -->
+    <div class="field">
+      <label>Farbe</label>
+      <div class="color-picker">
+        @for (color of presetColors; track color) {
+          <button type="button" class="color-dot" [style.background]="color"
+            [class.selected]="form.get('color')?.value === color"
+            (click)="selectColor(color)">
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a routerLink="/subscriptions" class="btn-secondary">Abbrechen</a>
+      <button type="submit" class="btn-primary" [disabled]="form.invalid || saving()">
+        {{ saving() ? 'Wird gespeichert...' : (isEdit() ? 'Speichern' : 'Hinzufügen') }}
+      </button>
+    </div>
+  </form>
+</div>

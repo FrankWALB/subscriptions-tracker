@@ -1,0 +1,61 @@
+<div class="list-header">
+  <div>
+    <h1>Meine Abos</h1>
+    @if (!loading() && subscriptions().length > 0) {
+      <p class="list-subtitle">
+        {{ subscriptions().length }} Abos &bull;
+        {{ totalMonthly() | currency:'EUR':'symbol':'1.2-2':'de' }}/Monat aktiv
+      </p>
+    }
+  </div>
+  <a routerLink="/subscriptions/new" class="btn-primary">+ Neues Abo</a>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner"></div>
+  </div>
+} @else if (subscriptions().length === 0) {
+  <div class="empty-state">
+    <div class="empty-icon">📋</div>
+    <h3>Noch keine Abos</h3>
+    <p>Füge dein erstes Abo hinzu und behalte den Überblick.</p>
+    <a routerLink="/subscriptions/new" class="btn-primary">Erstes Abo anlegen</a>
+  </div>
+} @else {
+  <div class="sub-grid">
+    @for (sub of subscriptions(); track sub.id) {
+      <div class="sub-card" [class.inactive]="!sub.isActive">
+        <div class="sub-accent" [style.background]="sub.color"></div>
+        <div class="sub-body">
+          <div class="sub-top">
+            <span class="sub-icon">{{ categoryIcons[sub.category] || '📦' }}</span>
+            <div class="sub-title">
+              <h3>{{ sub.name }}</h3>
+              <span class="sub-cat">{{ sub.category }}</span>
+            </div>
+            <div class="sub-toggle" (click)="toggleActive(sub)" [title]="sub.isActive ? 'Deaktivieren' : 'Aktivieren'">
+              <div class="toggle-track" [class.on]="sub.isActive">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-cost">
+            <span class="cost-main">{{ sub.cost | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+            <span class="cost-cycle">/ {{ cycleLabels[sub.billingCycle] }}</span>
+          </div>
+
+          <div class="sub-monthly">
+            ≈ {{ toMonthly(sub) | currency:'EUR':'symbol':'1.2-2':'de' }} / Monat
+          </div>
+
+          <div class="sub-actions">
+            <a [routerLink]="['/subscriptions', sub.id, 'edit']" class="btn-icon" title="Bearbeiten">✏️</a>
+            <button class="btn-icon btn-delete" (click)="delete(sub)" title="Löschen">🗑️</button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,175 @@
+.loading-state, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+
+  .empty-icon { font-size: 3rem; }
+  h3 { font-size: 1.25rem; font-weight: 600; color: var(--text-primary); }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.dashboard { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+
+  .kpi-icon { font-size: 2rem; flex-shrink: 0; }
+
+  .kpi-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .kpi-label { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .kpi-value { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
+
+  &.kpi-monthly { border-left: 4px solid #6366f1; }
+  &.kpi-yearly  { border-left: 4px solid #8b5cf6; }
+  &.kpi-count   { border-left: 4px solid #22c55e; }
+  &.kpi-daily   { border-left: 4px solid #f97316; }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+
+    h2 { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+  }
+
+  .card-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .card-link { font-size: 0.85rem; color: var(--accent); text-decoration: none; &:hover { text-decoration: underline; } }
+}
+
+.category-list { display: flex; flex-direction: column; gap: 0.875rem; }
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  .category-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .category-icon { font-size: 1rem; }
+    .category-name { flex: 1; font-size: 0.9rem; color: var(--text-secondary); }
+    .category-amount { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+  }
+}
+
+.upcoming-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.upcoming-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem;
+  background: var(--surface);
+  border-radius: 10px;
+  transition: background 0.15s;
+
+  &:hover { background: var(--border); }
+
+  .upcoming-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .upcoming-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+
+    .upcoming-name { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); }
+    .upcoming-date { font-size: 0.75rem; color: var(--text-muted); }
+  }
+
+  .upcoming-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.125rem;
+
+    .upcoming-cost { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+    .upcoming-days {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      &.urgent { color: #ef4444; font-weight: 600; }
+    }
+  }
+}
+
+.empty-hint { font-size: 0.875rem; color: var(--text-muted); text-align: center; padding: 1rem 0; }
